@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("c:\#scratch\")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("C:\#myPrograms\LoadSpocosyDataService\logs\")>  _
         Public Property ProcessLogPath() As String
             Get
                 Return CType(Me("ProcessLogPath"),String)
@@ -79,13 +79,49 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
-        Public Property MaximumRowsInCursor() As Integer
+         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+        Public Property HoursOffsetStreamFrom() As Integer
             Get
-                Return CType(Me("MaximumRowsInCursor"),Integer)
+                Return CType(Me("HoursOffsetStreamFrom"),Integer)
             End Get
             Set
-                Me("MaximumRowsInCursor") = value
+                Me("HoursOffsetStreamFrom") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("6")>  _
+        Public Property HoursOffsetStreamTo() As Integer
+            Get
+                Return CType(Me("HoursOffsetStreamTo"),Integer)
+            End Get
+            Set
+                Me("HoursOffsetStreamTo") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
+        Public Property LimitOutcomeRows() As Integer
+            Get
+                Return CType(Me("LimitOutcomeRows"),Integer)
+            End Get
+            Set
+                Me("LimitOutcomeRows") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
+        Public Property LimitBettingOfferRows() As Integer
+            Get
+                Return CType(Me("LimitBettingOfferRows"),Integer)
+            End Get
+            Set
+                Me("LimitBettingOfferRows") = value
             End Set
         End Property
     End Class

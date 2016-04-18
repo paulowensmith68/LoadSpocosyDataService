@@ -86,7 +86,7 @@ Public Class SpocosyDatabaseClass
                     parseData()
 
                     ' Leave cursor when we hit limit
-                    If intCursorCount > My.Settings.MaximumRowsInCursor Then
+                    If intCursorCount > My.Settings.LimitOutcomeRows Then
                         Exit While
                     End If
 
@@ -124,9 +124,34 @@ Public Class SpocosyDatabaseClass
         ' | MySql Select                                                   |
         ' | Get all rows for nodeName from bookmaker_xml_nodes             |
         ' \----------------------------------------------------------------/
-        cmdXmlLoad.CommandText = "SELECT id, xmlData FROM oddsmatching.bookmaker_xml_nodes where nodeName =@nodeName " &
-                                 "ORDER BY id"
+        cmdXmlLoad.CommandText = "SELECT bxn.`id`, bxn.`xmlData` FROM oddsmatching.bookmaker_xml_nodes AS bxn " &
+                                 "INNER JOIN Event As ev ON bxn.`event_id` = ev.`id` " &
+                                 "INNER JOIN outcome AS ou ON bxn.`outcome_id`=ou.`id` " &
+                                 "WHERE ou.`object`=""event"" AND bxn.`nodeName` = @nodeName AND " &
+                                 "ev.startdate >= str_to_date(@startDate, '%Y-%m-%d %H:%i:%s') AND " &
+                                 "ev.startdate < str_to_date(@endDate, '%Y-%m-%d %H:%i:%s') " &
+                                 "LIMIT @limit "
         cmdXmlLoad.Parameters.AddWithValue("nodeName", "outcome")
+
+        ' Get start and end date
+        Dim currentDateTime As DateTime = DateTime.UtcNow
+        Dim dtStartDate As DateTime
+        Dim dtEndDate As DateTime
+        Dim strStartDate As String
+        Dim strEndDate As String
+
+        ' Calculate start date/time and To date/time
+        dtStartDate = DateAdd(DateInterval.Hour, My.Settings.HoursOffsetStreamFrom, currentDateTime)
+        dtEndDate = DateAdd(DateInterval.Hour, My.Settings.HoursOffsetStreamTo, currentDateTime)
+        Dim centralEuropeZoneId As String = "Central Europe Standard Time"
+        Dim centralEuropeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(centralEuropeZoneId)
+        strStartDate = TimeZoneInfo.ConvertTimeFromUtc(dtStartDate, centralEuropeZone).ToString("yyyy-MM-dd HH:mm:ss")
+        strEndDate = TimeZoneInfo.ConvertTimeFromUtc(dtEndDate, centralEuropeZone).ToString("yyyy-MM-dd HH:mm:ss")
+
+        cmdXmlLoad.Parameters.AddWithValue("startDate", strStartDate)
+        cmdXmlLoad.Parameters.AddWithValue("endDate", strEndDate)
+        cmdXmlLoad.Parameters.AddWithValue("limit", My.Settings.LimitOutcomeRows)
+
         cmdXmlLoad.Connection = cno
 
         Try
@@ -140,7 +165,7 @@ Public Class SpocosyDatabaseClass
                     ' Increment counter
                     intCursorCount = intCursorCount + 1
 
-                    intXmlDataId = drXmlLoad.GetInt32(0)
+                    intXmlDataId = drXmlLoad.GetInt64(0)
                     Dim strXmlData As String = drXmlLoad.GetString(1)
 
                     ' Load to xml
@@ -150,7 +175,7 @@ Public Class SpocosyDatabaseClass
                     parseData()
 
                     ' Leave cursor when we hit limit
-                    If intCursorCount > My.Settings.MaximumRowsInCursor Then
+                    If intCursorCount > My.Settings.LimitOutcomeRows Then
                         Exit While
                     End If
 
@@ -190,10 +215,34 @@ Public Class SpocosyDatabaseClass
         ' | Get all rows for nodeName from bookmaker_xml_nodes             |
         ' \----------------------------------------------------------------/
         cmdXmlLoad.CommandText = "SELECT outcome_id, max(node_n), bxn.id, bxn.xmlData FROM oddsmatching.bookmaker_xml_nodes AS bxn " &
-                                 "INNER JOIN outcome AS ou ON bxn.`outcome_id`=ou.`id` " &
-                                 "WHERE ou.`object`=""event"" AND bxn.`nodeName` =@nodeName " &
-                                 "GROUP BY outcome_id"
+                                 "INNER Join outcome As ou On bxn.`outcome_id`=ou.`id` " &
+                                 "INNER Join event AS ev ON ou.objectFK = ev.`id` " &
+                                 "WHERE ou.`object`=""event"" AND bxn.`nodeName` = @nodeName AND " &
+                                 "ev.startdate >= str_to_date(@startDate, '%Y-%m-%d %H:%i:%s') AND " &
+                                 "ev.startdate < str_to_date(@endDate, '%Y-%m-%d %H:%i:%s') " &
+                                 "GROUP BY outcome_id " &
+                                 "LIMIT @limit "
         cmdXmlLoad.Parameters.AddWithValue("nodeName", "bettingoffer")
+
+        ' Get start and end date
+        Dim currentDateTime As DateTime = DateTime.UtcNow
+        Dim dtStartDate As DateTime
+        Dim dtEndDate As DateTime
+        Dim strStartDate As String
+        Dim strEndDate As String
+
+        ' Calculate start date/time and To date/time
+        dtStartDate = DateAdd(DateInterval.Hour, My.Settings.HoursOffsetStreamFrom, currentDateTime)
+        dtEndDate = DateAdd(DateInterval.Hour, My.Settings.HoursOffsetStreamTo, currentDateTime)
+        Dim centralEuropeZoneId As String = "Central Europe Standard Time"
+        Dim centralEuropeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(centralEuropeZoneId)
+        strStartDate = TimeZoneInfo.ConvertTimeFromUtc(dtStartDate, centralEuropeZone).ToString("yyyy-MM-dd HH:mm:ss")
+        strEndDate = TimeZoneInfo.ConvertTimeFromUtc(dtEndDate, centralEuropeZone).ToString("yyyy-MM-dd HH:mm:ss")
+
+        cmdXmlLoad.Parameters.AddWithValue("startDate", strStartDate)
+        cmdXmlLoad.Parameters.AddWithValue("endDate", strEndDate)
+        cmdXmlLoad.Parameters.AddWithValue("limit", My.Settings.LimitBettingOfferRows)
+
         cmdXmlLoad.Connection = cno
 
         Try
@@ -218,7 +267,7 @@ Public Class SpocosyDatabaseClass
                     parseData()
 
                     ' Leave cursor when we hit limit
-                    If intCursorCount > My.Settings.MaximumRowsInCursor Then
+                    If intCursorCount > My.Settings.LimitOutcomeRows Then
                         Exit While
                     End If
 

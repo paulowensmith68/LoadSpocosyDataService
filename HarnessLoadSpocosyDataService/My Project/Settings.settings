@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ProcessLogPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">c:\#scratch\</Value>
+      <Value Profile="(Default)">C:\#myPrograms\LoadSpocosyDataService\logs\</Value>
     </Setting>
     <Setting Name="ConnectionString" Type="(Connection string)" Scope="Application">
       <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -12,7 +12,16 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Database=OddsMatching;Data Source=eu-cdbr-azure-north-e.cloudapp.net;User Id=b083cb50265fec;Password=263fb5f7;persistsecurityinfo=True</Value>
     </Setting>
-    <Setting Name="MaximumRowsInCursor" Type="System.Int32" Scope="User">
+    <Setting Name="HoursOffsetStreamFrom" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="HoursOffsetStreamTo" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="LimitOutcomeRows" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="LimitBettingOfferRows" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">500</Value>
     </Setting>
   </Settings>

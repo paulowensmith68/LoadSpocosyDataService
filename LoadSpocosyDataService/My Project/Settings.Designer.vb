@@ -78,18 +78,6 @@ Namespace My
             End Set
         End Property
         
-        <Global.System.Configuration.UserScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
-        Public Property MaximumRowsInCursor() As Integer
-            Get
-                Return CType(Me("MaximumRowsInCursor"),Integer)
-            End Get
-            Set
-                Me("MaximumRowsInCursor") = value
-            End Set
-        End Property
-        
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.SpecialSettingAttribute(Global.System.Configuration.SpecialSetting.ConnectionString),  _
@@ -128,24 +116,48 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
-        Public Property OutcomesAndOffersHoursOffsetFrom() As Integer
+        Public Property HoursOffsetStreamFrom() As Integer
             Get
-                Return CType(Me("OutcomesAndOffersHoursOffsetFrom"),Integer)
+                Return CType(Me("HoursOffsetStreamFrom"),Integer)
             End Get
             Set
-                Me("OutcomesAndOffersHoursOffsetFrom") = value
+                Me("HoursOffsetStreamFrom") = value
             End Set
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
-        Public Property OutcomesAndOffersHoursOffsetTo() As String
+         Global.System.Configuration.DefaultSettingValueAttribute("6")>  _
+        Public Property HoursOffsetStreamTo() As Integer
             Get
-                Return CType(Me("OutcomesAndOffersHoursOffsetTo"),String)
+                Return CType(Me("HoursOffsetStreamTo"),Integer)
             End Get
             Set
-                Me("OutcomesAndOffersHoursOffsetTo") = value
+                Me("HoursOffsetStreamTo") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
+        Public Property LimitOutcomeRows() As Integer
+            Get
+                Return CType(Me("LimitOutcomeRows"),Integer)
+            End Get
+            Set
+                Me("LimitOutcomeRows") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
+        Public Property LimitBettingOfferRows() As Integer
+            Get
+                Return CType(Me("LimitBettingOfferRows"),Integer)
+            End Get
+            Set
+                Me("LimitBettingOfferRows") = value
             End Set
         End Property
     End Class
