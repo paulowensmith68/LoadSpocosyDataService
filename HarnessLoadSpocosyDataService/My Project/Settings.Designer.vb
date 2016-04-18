@@ -104,6 +104,18 @@ Namespace My
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
+        Public Property LimitEventRows() As Integer
+            Get
+                Return CType(Me("LimitEventRows"),Integer)
+            End Get
+            Set
+                Me("LimitEventRows") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("500")>  _
         Public Property LimitOutcomeRows() As Integer
             Get
                 Return CType(Me("LimitOutcomeRows"),Integer)
@@ -122,6 +134,30 @@ Namespace My
             End Get
             Set
                 Me("LimitBettingOfferRows") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Next6Hours")>  _
+        Public Property StreamName() As String
+            Get
+                Return CType(Me("StreamName"),String)
+            End Get
+            Set
+                Me("StreamName") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("A")>  _
+        Public Property StreamId() As String
+            Get
+                Return CType(Me("StreamId"),String)
+            End Get
+            Set
+                Me("StreamId") = value
             End Set
         End Property
     End Class

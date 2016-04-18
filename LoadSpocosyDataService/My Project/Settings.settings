@@ -33,5 +33,14 @@
     <Setting Name="LimitBettingOfferRows" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">500</Value>
     </Setting>
+    <Setting Name="LimitEventRows" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="StreamName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Next6Hours</Value>
+    </Setting>
+    <Setting Name="StreamId" Type="System.String" Scope="User">
+      <Value Profile="(Default)">A</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

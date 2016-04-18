@@ -77,6 +77,8 @@ Public Class Worker
         ' Write log entries for configuration settings
         gobjEvent.WriteToEventLog("WorkerThread : Cycle every (secs) : " + My.Settings.ProcessCycleEverySecs.ToString)
         gobjEvent.WriteToEventLog("WorkerThread : Cycle every (millisecs) : " + intAdapterCycleEveryMillisecs.ToString)
+        gobjEvent.WriteToEventLog("WorkerThread : Stream date/time offset from : " + My.Settings.HoursOffsetStreamFrom.ToString)
+        gobjEvent.WriteToEventLog("WorkerThread : Stream date/time offset to : " + My.Settings.HoursOffsetStreamTo.ToString)
 
 
         While Not m_booMustStop

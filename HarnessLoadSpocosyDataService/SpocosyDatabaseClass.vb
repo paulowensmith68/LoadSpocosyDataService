@@ -62,7 +62,8 @@ Public Class SpocosyDatabaseClass
         ' | Get all rows for nodeName from bookmaker_xml_nodes             |
         ' \----------------------------------------------------------------/
         cmdXmlLoad.CommandText = "SELECT id, xmlData FROM oddsmatching.bookmaker_xml_nodes where nodeName not in(""outcome"", ""bettingoffer"") " &
-                                 "ORDER BY id"
+                                 "LIMIT @limit "
+        cmdXmlLoad.Parameters.AddWithValue("limit", My.Settings.LimitEventRows)
         cmdXmlLoad.Connection = cno
 
         Try
@@ -76,7 +77,7 @@ Public Class SpocosyDatabaseClass
                     ' Increment counter
                     intCursorCount = intCursorCount + 1
 
-                    intXmlDataId = drXmlLoad.GetInt32(0)
+                    intXmlDataId = drXmlLoad.GetInt64(0)
                     Dim strXmlData As String = drXmlLoad.GetString(1)
 
                     ' Load to xml
@@ -85,17 +86,18 @@ Public Class SpocosyDatabaseClass
                     ' Parse and insert into tables
                     parseData()
 
-                    ' Leave cursor when we hit limit
-                    If intCursorCount > My.Settings.LimitOutcomeRows Then
-                        Exit While
-                    End If
-
                 End While ' End: Outer Loop
 
             End If
 
             ' Close the Data reader
             drXmlLoad.Close()
+
+            gobjEvent.WriteToEventLog("SpocosyDatabaseClass:  Processing InsertEventsAndOtherData, number of rows: " + intCursorCount.ToString)
+
+        Catch ex As Exception
+
+            gobjEvent.WriteToEventLog("SpocosyDatabaseClass:  Processing InsertEventsAndOtherData exception: " + ex.Message, EventLogEntryType.Error)
 
         Finally
             cno.Close()
@@ -174,17 +176,18 @@ Public Class SpocosyDatabaseClass
                     ' Parse and insert into tables
                     parseData()
 
-                    ' Leave cursor when we hit limit
-                    If intCursorCount > My.Settings.LimitOutcomeRows Then
-                        Exit While
-                    End If
-
                 End While ' End: Outer Loop
 
             End If
 
             ' Close the Data reader
             drXmlLoad.Close()
+
+            gobjEvent.WriteToEventLog("SpocosyDatabaseClass:  Processed InsertOutcomes, number of rows: " + intCursorCount.ToString)
+
+        Catch ex As Exception
+
+            gobjEvent.WriteToEventLog("SpocosyDatabaseClass:  Processing InsertOutcomes exception: " + ex.Message, EventLogEntryType.Error)
 
         Finally
             cno.Close()
@@ -257,7 +260,7 @@ Public Class SpocosyDatabaseClass
                     intCursorCount = intCursorCount + 1
 
                     ' Use the outcome id to delete all other outcomes aswell
-                    intXmlDataId = drXmlLoad.GetInt32(0)
+                    intXmlDataId = drXmlLoad.GetInt64(0)
                     Dim strXmlData As String = drXmlLoad.GetString(3)
 
                     ' Load to xml
@@ -266,17 +269,18 @@ Public Class SpocosyDatabaseClass
                     ' Parse and insert into tables
                     parseData()
 
-                    ' Leave cursor when we hit limit
-                    If intCursorCount > My.Settings.LimitOutcomeRows Then
-                        Exit While
-                    End If
-
                 End While ' End: Outer Loop
 
             End If
 
             ' Close the Data reader
             drXmlLoad.Close()
+
+            gobjEvent.WriteToEventLog("SpocosyDatabaseClass:  Processed InsertBettingOffers, number of rows: " + intCursorCount.ToString)
+
+        Catch ex As Exception
+
+            gobjEvent.WriteToEventLog("SpocosyDatabaseClass:  Processing InsertBettingOffers exception: " + ex.Message, EventLogEntryType.Error)
 
         Finally
             cno.Close()
