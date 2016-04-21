@@ -9,9 +9,6 @@ Public Class SpocosyDatabaseClass
     ' Holds the connection string to the database used.
     Public connectionString As String = globalConnectionString
 
-    ' Holds name of key to delete data from after inserts
-    Public strDeleteKeyType As String = ""
-
     'Holds message received back from class
     Public returnMessage As String = ""
 
@@ -50,9 +47,6 @@ Public Class SpocosyDatabaseClass
 
         ' Populate lists
         populateLists()
-
-        ' Sets type of deletion to perform later
-        strDeleteKeyType = "xmlNodeId"
 
         ' Reset cursor counter
         intCursorCount = 0
@@ -116,9 +110,6 @@ Public Class SpocosyDatabaseClass
         ' Populate lists
         populateLists()
 
-        ' Sets type of deletion to perform later
-        strDeleteKeyType = "xmlNodeId"
-
         ' Reset cursor counter
         intCursorCount = 0
 
@@ -128,8 +119,7 @@ Public Class SpocosyDatabaseClass
         ' \----------------------------------------------------------------/
         cmdXmlLoad.CommandText = "SELECT bxn.`id`, bxn.`xmlData` FROM oddsmatching.bookmaker_xml_nodes AS bxn " &
                                  "INNER JOIN Event As ev ON bxn.`event_id` = ev.`id` " &
-                                 "INNER JOIN outcome AS ou ON bxn.`outcome_id`=ou.`id` " &
-                                 "WHERE ou.`object`=""event"" AND bxn.`nodeName` = @nodeName AND " &
+                                 "WHERE bxn.`nodeName` = @nodeName AND " &
                                  "ev.startdate >= str_to_date(@startDate, '%Y-%m-%d %H:%i:%s') AND " &
                                  "ev.startdate < str_to_date(@endDate, '%Y-%m-%d %H:%i:%s') " &
                                  "LIMIT @limit "
@@ -149,6 +139,8 @@ Public Class SpocosyDatabaseClass
         Dim centralEuropeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(centralEuropeZoneId)
         strStartDate = TimeZoneInfo.ConvertTimeFromUtc(dtStartDate, centralEuropeZone).ToString("yyyy-MM-dd HH:mm:ss")
         strEndDate = TimeZoneInfo.ConvertTimeFromUtc(dtEndDate, centralEuropeZone).ToString("yyyy-MM-dd HH:mm:ss")
+
+        gobjEvent.WriteToEventLog("SpocosyDatabaseClass:  Searching for outcomes between: " + strStartDate + " and " + strEndDate)
 
         cmdXmlLoad.Parameters.AddWithValue("startDate", strStartDate)
         cmdXmlLoad.Parameters.AddWithValue("endDate", strEndDate)
@@ -207,9 +199,6 @@ Public Class SpocosyDatabaseClass
         ' Populate lists
         populateLists()
 
-        ' Sets type of deletion to perform later
-        strDeleteKeyType = "outcomeId"
-
         ' Reset cursor counter
         intCursorCount = 0
 
@@ -217,13 +206,12 @@ Public Class SpocosyDatabaseClass
         ' | MySql Select                                                   |
         ' | Get all rows for nodeName from bookmaker_xml_nodes             |
         ' \----------------------------------------------------------------/
-        cmdXmlLoad.CommandText = "SELECT outcome_id, max(node_n), bxn.id, bxn.xmlData FROM oddsmatching.bookmaker_xml_nodes AS bxn " &
+        cmdXmlLoad.CommandText = "SELECT bxn.id, bxn.xmlData FROM oddsmatching.bookmaker_xml_nodes AS bxn " &
                                  "INNER Join outcome As ou On bxn.`outcome_id`=ou.`id` " &
                                  "INNER Join event AS ev ON ou.objectFK = ev.`id` " &
                                  "WHERE ou.`object`=""event"" AND bxn.`nodeName` = @nodeName AND " &
                                  "ev.startdate >= str_to_date(@startDate, '%Y-%m-%d %H:%i:%s') AND " &
                                  "ev.startdate < str_to_date(@endDate, '%Y-%m-%d %H:%i:%s') " &
-                                 "GROUP BY outcome_id " &
                                  "LIMIT @limit "
         cmdXmlLoad.Parameters.AddWithValue("nodeName", "bettingoffer")
 
@@ -241,6 +229,8 @@ Public Class SpocosyDatabaseClass
         Dim centralEuropeZone As TimeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(centralEuropeZoneId)
         strStartDate = TimeZoneInfo.ConvertTimeFromUtc(dtStartDate, centralEuropeZone).ToString("yyyy-MM-dd HH:mm:ss")
         strEndDate = TimeZoneInfo.ConvertTimeFromUtc(dtEndDate, centralEuropeZone).ToString("yyyy-MM-dd HH:mm:ss")
+
+        gobjEvent.WriteToEventLog("SpocosyDatabaseClass:  Searching for bettingoffers between: " + strStartDate + " and " + strEndDate)
 
         cmdXmlLoad.Parameters.AddWithValue("startDate", strStartDate)
         cmdXmlLoad.Parameters.AddWithValue("endDate", strEndDate)
@@ -261,7 +251,7 @@ Public Class SpocosyDatabaseClass
 
                     ' Use the outcome id to delete all other outcomes aswell
                     intXmlDataId = drXmlLoad.GetInt64(0)
-                    Dim strXmlData As String = drXmlLoad.GetString(3)
+                    Dim strXmlData As String = drXmlLoad.GetString(1)
 
                     ' Load to xml
                     Me.myXml.LoadXml(strXmlData)
@@ -323,11 +313,7 @@ Public Class SpocosyDatabaseClass
         Dim myCommand1 As New MySqlCommand((Convert.ToString("select IF(count(*)=0, -1, n) as n from ") & nodeName) + " where id=@id")
         Dim myCommand2 As New MySqlCommand()
         Dim myCommand3 As New MySqlCommand()
-        If strDeleteKeyType = "outcomeId" Then
-            myCommand3.CommandText = "delete from oddsmatching.bookmaker_xml_nodes where outcome_id = @xmlNodesId"
-        Else
-            myCommand3.CommandText = "delete from oddsmatching.bookmaker_xml_nodes where id = @xmlNodesId"
-        End If
+        myCommand3.CommandText = "delete from oddsmatching.bookmaker_xml_nodes where id = @xmlNodesId"
         Dim SQLtrans As MySqlTransaction = Nothing
         Dim num As Integer = 0
         Dim num_del As Integer = 0

@@ -79,7 +79,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("0")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("24")>  _
         Public Property HoursOffsetStreamFrom() As Integer
             Get
                 Return CType(Me("HoursOffsetStreamFrom"),Integer)
@@ -91,7 +91,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("6")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("48")>  _
         Public Property HoursOffsetStreamTo() As Integer
             Get
                 Return CType(Me("HoursOffsetStreamTo"),Integer)
